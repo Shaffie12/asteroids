@@ -1,6 +1,8 @@
 package game1;
 
 import util.JEasyFrame;
+import util.SoundManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +93,7 @@ public class Game
         score+=amount;
         if(score%10000==0)
         {
+            SoundManager.play(SoundManager.extraShip);
             lives+=1;
         }
     }
@@ -129,6 +132,7 @@ public class Game
         lives--;
         if (lives<=0)
         {
+            SoundManager.play(SoundManager.bangLarge);
             gameOver=true;
 
         }
@@ -139,7 +143,7 @@ public class Game
     {
         Game game = new Game();
         View view = new View(game);
-        new JEasyFrame(view, "Basic Game").addKeyListener(game.ctrl);
+        new JEasyFrame(view, "Asteroids").addKeyListener(game.ctrl);
         while (!gameOver)
         {
             game.update();
@@ -148,7 +152,7 @@ public class Game
         }
        view.repaint();
 
-        //make asteroids not spawn near player
+
 
     }
 

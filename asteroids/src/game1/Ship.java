@@ -1,5 +1,6 @@
 package game1;
 
+import util.SoundManager;
 import util.Vector2D;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -73,6 +74,7 @@ public class Ship extends GameObject
         bulletVel.addScaled(direction,MUZZLE_VELOCITY);
 
         bullet = new Bullet(bulletPos, bulletVel);
+        SoundManager.fire();
         bullet.shipParent=true;
 
     }
@@ -81,6 +83,7 @@ public class Ship extends GameObject
     @Override
     public void hit()
     {
+        SoundManager.play(SoundManager.beat1);
         Game.playerHit();
         if(Game.lives<=0)
             dead=true;

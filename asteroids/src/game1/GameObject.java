@@ -1,5 +1,6 @@
 package game1;
 
+import util.SoundManager;
 import util.Vector2D;
 import java.awt.*;
 
@@ -33,8 +34,16 @@ public abstract class GameObject
         {
             this.hit();
             other.hit();
+
             if(this instanceof Asteroid && other instanceof Bullet)
             {
+                if (this.radius <2.5)
+                    SoundManager.play(SoundManager.bangSmall);
+                else if(this.radius>=2.5  && this.radius<=5.25)
+                    SoundManager.play(SoundManager.bangMedium);
+                else
+                    SoundManager.play(SoundManager.bangLarge);
+
                 Bullet bullet = (Bullet) other;
                 if(bullet.shipParent)
                 {
@@ -45,6 +54,7 @@ public abstract class GameObject
             {
                 Game.lives-=1;
             }
+
         }
     }
 

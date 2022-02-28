@@ -1,22 +1,27 @@
 package game1;
+import util.SoundManager;
 import util.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
-
-import static game1.Constants.FRAME_HEIGHT;
-import static game1.Constants.FRAME_WIDTH;
+import static game1.Constants.*;
 
 public class Asteroid extends GameObject
 {
-    //public static final double RADIUS=10;
     public static final double MAX_SPEED = 100;
     public Asteroid shard=null;
+    public Sprite s;
 
 
     public Asteroid(double x, double y, double vx, double vy, double radius)
     {
+
         super(new Vector2D(x,y),new Vector2D(vx,vy),radius);
+        Image rsprite = (Math.random() >0.5? ASTEROID1: ASTEROID2);
+        this.s = new Sprite(rsprite,position,new Vector2D(0,1),
+                radius,radius);
+
 
 
     }
@@ -55,14 +60,18 @@ public class Asteroid extends GameObject
     @Override
     public void draw(Graphics2D g)
     {
-        g.setColor(Color.red);
-        g.fillOval((int) (position.x - radius), (int) (position.y- radius), (int)(2* radius), (int)(2 * radius));
+        s.draw(g);
+        //g.setColor(Color.red);
+        //g.fillOval((int) (position.x - radius), (int) (position.y- radius), (int)(2* radius), (int)(2 * radius));
     }
 
     @Override
     public void hit()
     {
+
         radius=radius/2;
+        s.width = s.width/2;
+        s.height = s.height/2;
         if(radius<5)
         {
 
@@ -71,7 +80,6 @@ public class Asteroid extends GameObject
         else
         {
             shard = new Asteroid(position.x, position.y, -velocity.x, -velocity.y, radius);
-
         }
 
     }

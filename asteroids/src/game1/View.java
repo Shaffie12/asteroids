@@ -10,10 +10,20 @@ public class View extends JComponent
 {
     public static final Color BG_COLOR = Color.black;
     private Game game;
+    Image img = Constants.MILKYWAY;
+    AffineTransform bg;
+
 
     public View(Game game)
     {
         this.game=game;
+        double imgWid = img.getWidth(null);
+        double imgHeight = img.getHeight(null);
+        double stretchx = (imgWid >Constants.FRAME_WIDTH? 1: Constants.FRAME_WIDTH/imgWid);
+        double stretchy =(imgHeight >Constants.FRAME_HEIGHT? 1: Constants.FRAME_HEIGHT/imgHeight);
+
+        bg = new AffineTransform();
+        bg.scale(stretchx,stretchx);
     }
 
     @Override
@@ -21,7 +31,8 @@ public class View extends JComponent
     {
         Graphics2D g =(Graphics2D) g0;
         g.setColor(BG_COLOR);
-        g.fillRect(0,0,getWidth(),getHeight());
+        g.drawImage(img,bg,null);
+        //g.fillRect(0,0,getWidth(),getHeight());
         if(!Game.gameOver)
         {
             g.setColor(Color.WHITE);

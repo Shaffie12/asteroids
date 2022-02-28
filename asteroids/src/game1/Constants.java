@@ -1,6 +1,9 @@
 package game1;
 
+import util.ImageManager;
+
 import java.awt.*;
+import java.io.IOException;
 
 public class Constants
 {
@@ -14,5 +17,19 @@ public class Constants
     public static final double boty = FRAME_HEIGHT -80;
     public static final double leftx = FRAME_WIDTH-(FRAME_WIDTH+80);
     public static final double rightx = FRAME_WIDTH-80;
+    public static Image ASTEROID1, ASTEROID2, MILKYWAY;
+    static
+    {
+        try
+        {
+            ASTEROID1 = ImageManager.loadImage("as1");
+            ASTEROID2 = ImageManager.loadImage("as2");
+            MILKYWAY = ImageManager.loadImage("milkyway1");
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
 }
