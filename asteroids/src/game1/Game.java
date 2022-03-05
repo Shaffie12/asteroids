@@ -2,6 +2,7 @@ package game1;
 
 import util.JEasyFrame;
 import util.SoundManager;
+import util.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class Game
     public static final  int N_INITIAL_ASTEROIDS = 5;
     public List<GameObject> objects;
     public Keys ctrl;
-    public Ship ship;
+    public PlayerShip playerShip;
     public static long score;
     public static int lives =3;
     public static int level=1;
@@ -22,25 +23,34 @@ public class Game
         score=0;
         objects = new ArrayList<>();
         ctrl = new Keys();
-        ship = new Ship(ctrl);
+        playerShip = new PlayerShip(ctrl);
+        //Saucer ufo = Saucer.makeRandomSaucer();
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
         {
             objects.add(Asteroid.makeRandomAsteroid());
         }
-        objects.add(ship);
+        objects.add(playerShip);
+        //objects.add(ufo);
+
 
     }
 
     public void update()
-
     {
         List<GameObject> alive = new ArrayList<>();
         boolean noAsteroid=true;
         boolean noShip=true;
+        boolean noEnemy = true;
         for(int i=0;i<objects.size();i++)
         {
             for(int j=i+1;j<objects.size();j++)
-                objects.get(i).collisionHandling(objects.get(j));
+            {
+                if(objects.get(i).getClass()!=objects.get(j).getClass())
+                {
+                    if(objects.get(i).overlap(objects.get(j)))
+                        objects.get(i).collisionHandling(objects.get(j));
+                }
+            }
 
             objects.get(i).update();
             if(objects.get(i) instanceof  Asteroid)
@@ -54,15 +64,25 @@ public class Game
                 }
 
             }
-            else if(objects.get(i) instanceof Ship)
+            else if(objects.get(i) instanceof PlayerShip) //add the saucer bullets
             {
                 noShip = false;
-                if(!(ship.bullet == null))
+                if(!(playerShip.bullet == null))
                 {
-                    alive.add(ship.bullet);
-                    ship.bullet = null;
+                    alive.add(playerShip.bullet);
+                    playerShip.bullet = null;
                 }
 
+            }
+            if(objects.get(i) instanceof Saucer)
+            {
+                noEnemy=false;
+                Saucer s = (Saucer) objects.get(i);
+                if(!(s.bullet==null))
+                {
+                    alive.add(s.bullet);
+                    s.bullet=null;
+                }
             }
             if(objects.get(i).getClass()==Bullet.class)
             {
@@ -80,7 +100,7 @@ public class Game
             objects.clear();
             objects.addAll(alive);
         }
-        if(noAsteroid)
+        if(noAsteroid && noEnemy)
         {
             newLevel();
         }
@@ -122,8 +142,17 @@ public class Game
                 objects.add(Asteroid.makeRandomAsteroid());
 
             }
-            //ship = new Ship(ctrl);
-            objects.add(ship);
+            objects.add(playerShip);
+            if(level>3)
+            {
+                double prob = 1-(1-(level*0.1));
+                Saucer s =Math.random() < prob? Saucer.makeRandomSaucer():null;
+                if(s!=null)
+                {
+                    objects.add(s);
+                }
+                System.out.println("probability to spawn a saucer was: "+prob);
+            }
         }
     }
 
@@ -138,6 +167,7 @@ public class Game
         }
 
     }
+
     //main
     public static void main(String[] args) throws Exception
     {

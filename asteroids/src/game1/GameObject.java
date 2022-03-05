@@ -25,38 +25,16 @@ public abstract class GameObject
 
     public boolean overlap(GameObject other)
     {
-        return (this.position.dist(other.position)<(this.radius+ other.radius));
+        return (this.position.dist(other.position)<(this.radius+ other.radius) || other.position.dist(this.position)<(other.radius+this.radius));
     }
 
     public void collisionHandling(GameObject other)
     {
-        if(this.getClass()!=other.getClass() && this.overlap(other))
-        {
-            this.hit();
-            other.hit();
+        this.hit();
+        other.hit();
 
-            if(this instanceof Asteroid && other instanceof Bullet)
-            {
-                if (this.radius <2.5)
-                    SoundManager.play(SoundManager.bangSmall);
-                else if(this.radius>=2.5  && this.radius<=5.25)
-                    SoundManager.play(SoundManager.bangMedium);
-                else
-                    SoundManager.play(SoundManager.bangLarge);
-
-                Bullet bullet = (Bullet) other;
-                if(bullet.shipParent)
-                {
-                    Game.incScore(100);
-                }
-            }
-            if(this instanceof Ship && other instanceof Bullet || other instanceof Asteroid)
-            {
-                Game.lives-=1;
-            }
-
-        }
     }
+
 
     public void update()
     {

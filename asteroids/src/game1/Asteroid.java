@@ -66,9 +66,20 @@ public class Asteroid extends GameObject
     }
 
     @Override
+    public void collisionHandling(GameObject other)
+    {
+        if(other instanceof PlayerShip || other instanceof Bullet && (((Bullet)other).playerBullet))
+        {
+            this.hit();
+            other.hit();
+            Game.incScore(100);
+        }
+    }
+
+
+    @Override
     public void hit()
     {
-
         radius=radius/2;
         s.width = s.width/2;
         s.height = s.height/2;

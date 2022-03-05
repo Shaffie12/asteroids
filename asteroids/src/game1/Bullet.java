@@ -7,7 +7,7 @@ import java.awt.*;
 public class Bullet extends GameObject
 {
     public static final int RADIUS = 3;
-    public boolean shipParent;
+    public boolean playerBullet;
 
     public Bullet(Vector2D pos, Vector2D vel)
     {
@@ -25,6 +25,23 @@ public class Bullet extends GameObject
     public void update()
     {
         position.addScaled(velocity,Constants.DT);
+    }
+
+    @Override
+    public void collisionHandling(GameObject other)
+    {
+        if (!playerBullet && other instanceof PlayerShip)
+        {
+            this.hit();
+            other.hit();
+        }
+        else if(playerBullet && other instanceof Asteroid || other instanceof Saucer)
+        {
+            this.hit();
+            other.hit();
+        }
+
+
     }
 
 }

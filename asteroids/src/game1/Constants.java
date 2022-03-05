@@ -17,7 +17,7 @@ public class Constants
     public static final double boty = FRAME_HEIGHT -80;
     public static final double leftx = FRAME_WIDTH-(FRAME_WIDTH+80);
     public static final double rightx = FRAME_WIDTH-80;
-    public static Image ASTEROID1, ASTEROID2, MILKYWAY;
+    public static Image ASTEROID1, ASTEROID2, MILKYWAY, UFO;
     static
     {
         try
@@ -25,6 +25,7 @@ public class Constants
             ASTEROID1 = ImageManager.loadImage("as1");
             ASTEROID2 = ImageManager.loadImage("as2");
             MILKYWAY = ImageManager.loadImage("milkyway1");
+            UFO = ImageManager.loadImage("ufo");
         }
         catch(IOException e)
         {

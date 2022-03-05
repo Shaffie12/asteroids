@@ -30,12 +30,12 @@ public class Sprite
     public double width;
     public double height;
 
-    public Sprite(Image image, Vector2D s, Vector2D direction, double width,
+    public Sprite(Image image, Vector2D pos, Vector2D direction, double width,
                   double height) {
         // the direction and position must be references to the direction and position vectors in the
         // game object, not copies
         this.image = image;
-        this.position = s;
+        this.position = pos;
         this.direction = direction;
         this.width = width;
         this.height = height;
@@ -54,7 +54,7 @@ public class Sprite
         double imW = image.getWidth(null);
         double imH = image.getHeight(null);
         AffineTransform t = new AffineTransform();
-        t.rotate(direction.angle(), 0, 0);
+        //t.rotate(direction.angle(), 0, 0);
         t.scale(width/10,height/10);
         t.translate(-imW / 2.0, -imH / 2.0);
         AffineTransform t0 = g.getTransform();
