@@ -39,6 +39,18 @@ public class Bullet extends GameObject
         {
             this.hit();
             other.hit();
+            if(other instanceof Saucer)
+            {
+                if(other.radius==10)
+                {
+                    Game.incScore(500);
+                }
+                else
+                {
+                    Game.incScore(300);
+                }
+            }
+
         }
 
 

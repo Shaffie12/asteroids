@@ -23,7 +23,6 @@ public class Asteroid extends GameObject
                 radius,radius);
 
 
-
     }
 
 
@@ -61,18 +60,26 @@ public class Asteroid extends GameObject
     public void draw(Graphics2D g)
     {
         s.draw(g);
-        //g.setColor(Color.red);
         //g.fillOval((int) (position.x - radius), (int) (position.y- radius), (int)(2* radius), (int)(2 * radius));
     }
 
     @Override
     public void collisionHandling(GameObject other)
     {
-        if(other instanceof PlayerShip || other instanceof Bullet && (((Bullet)other).playerBullet))
+        if(other instanceof Bullet && (((Bullet)other).playerBullet))
+        {
+            if(radius>=5 && radius<=7)
+                Game.incScore(200);
+            else
+                Game.incScore(100);
+            this.hit();
+            other.hit();
+
+        }
+        else if (other instanceof  PlayerShip)
         {
             this.hit();
             other.hit();
-            Game.incScore(100);
         }
     }
 

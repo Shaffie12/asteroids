@@ -2,7 +2,7 @@ package game1;
 
 public class RandomAction implements Controller
 {
-    Action action= new Action();
+    Action action;
 
     double moveTimer=0;
     double rotTimer=0;
@@ -12,12 +12,9 @@ public class RandomAction implements Controller
     @Override
     public Action action()
     {
+        action=new Action();
         performActions(Math.random(), Math.random() > 0.5 ? 1 : -1, Math.random());
-
-
-
         return action;
-
     }
 
     void performActions(double shoottime,int dir, double rottime)

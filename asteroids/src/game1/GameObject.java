@@ -32,7 +32,6 @@ public abstract class GameObject
     {
         this.hit();
         other.hit();
-
     }
 
 
@@ -43,5 +42,6 @@ public abstract class GameObject
     }
 
     public abstract void draw(Graphics2D g);
+
 
 }

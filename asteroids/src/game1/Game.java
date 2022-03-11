@@ -2,7 +2,6 @@ package game1;
 
 import util.JEasyFrame;
 import util.SoundManager;
-import util.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +23,35 @@ public class Game
         objects = new ArrayList<>();
         ctrl = new Keys();
         playerShip = new PlayerShip(ctrl);
-        //Saucer ufo = Saucer.makeRandomSaucer();
+        Saucer bigSaucer = Saucer.makeRandomSaucer(true);
+        Saucer smallSaucer = Saucer.makeRandomSaucer(false);
+
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
         {
             objects.add(Asteroid.makeRandomAsteroid());
         }
         objects.add(playerShip);
-        //objects.add(ufo);
+        objects.add(bigSaucer);
+        objects.add(smallSaucer);
+        //targeting AIs
+        AimNShoot hard= new AimNShoot(this, true);
+        hard.aimer = smallSaucer;
+        smallSaucer.ctrl=hard;
 
+    }
+
+    //use this
+    public Saucer makeAISaucer()
+    {
+        boolean big = Math.random() > 0.5;
+        boolean hard = Math.random() >0.5;
+        Saucer s = Saucer.makeRandomSaucer(big);
+        if (!big)
+        {
+            s.ctrl=new AimNShoot(this,hard);
+        }
+
+        return s;
 
     }
 
@@ -39,9 +59,9 @@ public class Game
     {
         List<GameObject> alive = new ArrayList<>();
         boolean noAsteroid=true;
-        boolean noShip=true;
         boolean noEnemy = true;
-        for(int i=0;i<objects.size();i++)
+
+        for(int i=0;i<objects.size();i++) //because of this loop, object at the end of the array is never checked against anything.  Its collision handling has to be in the other object's. (UFO becomes (this), but other part of the loop never executes)
         {
             for(int j=i+1;j<objects.size();j++)
             {
@@ -53,10 +73,9 @@ public class Game
             }
 
             objects.get(i).update();
-            if(objects.get(i) instanceof  Asteroid)
+            if(objects.get(i) instanceof Asteroid a)
             {
                 noAsteroid=false;
-                Asteroid a = (Asteroid) objects.get(i);
                 if(!(a.shard==null))
                 {
                     alive.add(a.shard);
@@ -64,9 +83,8 @@ public class Game
                 }
 
             }
-            else if(objects.get(i) instanceof PlayerShip) //add the saucer bullets
+            else if(objects.get(i) instanceof PlayerShip)
             {
-                noShip = false;
                 if(!(playerShip.bullet == null))
                 {
                     alive.add(playerShip.bullet);
@@ -77,11 +95,11 @@ public class Game
             if(objects.get(i) instanceof Saucer)
             {
                 noEnemy=false;
-                Saucer s = (Saucer) objects.get(i);
-                if(!(s.bullet==null))
+                if(((Saucer) objects.get(i)).bullet!=null)
                 {
-                    alive.add(s.bullet);
-                    s.bullet=null;
+                    alive.add(((Saucer)objects.get(i)).bullet);
+
+                    ((Saucer)objects.get(i)).bullet=null;
                 }
             }
             if(objects.get(i).getClass()==Bullet.class)
@@ -143,16 +161,7 @@ public class Game
 
             }
             objects.add(playerShip);
-            if(level>3)
-            {
-                double prob = 1-(1-(level*0.1));
-                Saucer s =Math.random() < prob? Saucer.makeRandomSaucer():null;
-                if(s!=null)
-                {
-                    objects.add(s);
-                }
-                System.out.println("probability to spawn a saucer was: "+prob);
-            }
+            objects.add(Saucer.makeRandomSaucer(false));
         }
     }
 

@@ -1,26 +1,22 @@
 package game1;
-
-import util.SoundManager;
 import util.Vector2D;
-
 import java.awt.*;
 
 public abstract class Ship extends GameObject
 {
-    int hitboxSize;
     Color clr;
-    Controller ctrl;
+    public Controller ctrl;
     long lastFire;
     Bullet bullet;
     Vector2D direction;
     double MUZZLE_VELOCITY;
-    double STEER_RATE;
+    public double STEER_RATE;
+    public static double MAX_SPEED=200;
 
 
     public Ship(Vector2D pos, Vector2D vel, int rad, Controller c )
     {
         super(pos,vel,rad);
-        hitboxSize=rad;
         ctrl=c;
         lastFire=0;
         bullet=null;
@@ -45,6 +41,10 @@ public abstract class Ship extends GameObject
 
     }
 
+   public boolean canHit(GameObject other)
+   {
+       return true;
+   }
 
 
 }

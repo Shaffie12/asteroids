@@ -13,15 +13,9 @@ public class PlayerShip extends Ship
 
     public int XP[] = { -6, 0, 6, 0 }, YP[] = { 8, 4, 8, -8 };
     private static final int HITBOX = 8;
-    //public static final double STEER_RATE = 2*Math.PI; //rotation velocity in rad/sec
     public static final double MAG_ACC = 200; //acceleration when thrust is applied
     public static final double DRAG = 0.01; //constant speed loss factor
-    //public static final Color COLOR = Color.cyan;
-    //public static final double MUZZLE_VELOCITY = 400;
-    //private static long lastFire=0;
-    //public Vector2D direction; //where the ship is pointing
-   // private final Controller ctrl;
-    //public Bullet bullet = null;
+
 
     public PlayerShip(Controller c)
     {
@@ -31,6 +25,7 @@ public class PlayerShip extends Ship
         direction=new Vector2D(0,-1);
         MUZZLE_VELOCITY=400;
         STEER_RATE=2*Math.PI;
+
 
     }
 
@@ -96,12 +91,15 @@ public class PlayerShip extends Ship
     public void hit()
     {
         SoundManager.play(SoundManager.beat1);
-        Game.playerHit();
-        if(Game.lives<=0)
-            dead=true;
+        //Game.playerHit();
+        //if(Game.lives<=0)
+            //dead=true;
     }
 
-
-
+    @Override
+    public boolean canHit(GameObject other)
+    {
+        return other instanceof Asteroid || other instanceof Saucer;
+    }
 
 }

@@ -12,18 +12,7 @@ import util.Vector2D;
 
 public class Sprite
 {
-/*
-    public static Image ASTEROID1, ASTEROID2, MILKYWAY;
-    static {
-        try {
-            ASTEROID1 = ImageManager.loadImage("as1");
-            MILKYWAY = ImageManager.loadImage("milkyway");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
- */
     public Image image;
     public Vector2D position;
     public Vector2D direction;
@@ -32,8 +21,6 @@ public class Sprite
 
     public Sprite(Image image, Vector2D pos, Vector2D direction, double width,
                   double height) {
-        // the direction and position must be references to the direction and position vectors in the
-        // game object, not copies
         this.image = image;
         this.position = pos;
         this.direction = direction;
