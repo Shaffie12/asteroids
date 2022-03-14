@@ -37,7 +37,7 @@ public class Controllers
 
 
     public static double angleToTarget(Ship ship, GameObject target) {
-        Vector2D targetPosition = new Vector2D(target.position).addScaled(target.velocity, Constants.DT *10);
+        Vector2D targetPosition = new Vector2D(target.position).addScaled(target.velocity, Constants.DT );
         return ship.direction.angle(targetPosition.subtract(ship.position));
     }
 
@@ -52,7 +52,7 @@ public class Controllers
     {
         double angle = angleToTarget(ship,target);
 
-        if (Math.abs(angle) < 0.1 * ship.STEER_RATE * Constants.DT)
+        if (Math.abs(angle) < 1 * ship.STEER_RATE*Constants.DT )
             return 0;
         else
             return angle > 0 ? 1 : -1; //angle > 0? return 1, else -1

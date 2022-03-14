@@ -18,6 +18,7 @@ public class Constants
     public static final double leftx = FRAME_WIDTH-(FRAME_WIDTH+80);
     public static final double rightx = FRAME_WIDTH-80;
     public static Image ASTEROID1, ASTEROID2, MILKYWAY, UFO;
+    public static Image POWERUP;
     static
     {
         try
@@ -26,6 +27,7 @@ public class Constants
             ASTEROID2 = ImageManager.loadImage("as2");
             MILKYWAY = ImageManager.loadImage("milkyway1");
             UFO = ImageManager.loadImage("ufo");
+            POWERUP = ImageManager.loadImage("powerup");
         }
         catch(IOException e)
         {

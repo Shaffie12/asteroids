@@ -35,7 +35,7 @@ public class Bullet extends GameObject
             this.hit();
             other.hit();
         }
-        else if(playerBullet && other instanceof Asteroid || other instanceof Saucer)
+        else if(playerBullet && other instanceof Asteroid || playerBullet && other instanceof Saucer)
         {
             this.hit();
             other.hit();

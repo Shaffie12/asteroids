@@ -13,19 +13,18 @@ public class PlayerShip extends Ship
 
     public int XP[] = { -6, 0, 6, 0 }, YP[] = { 8, 4, 8, -8 };
     private static final int HITBOX = 8;
-    public static final double MAG_ACC = 200; //acceleration when thrust is applied
+    public static final double MAG_ACC = 430; //acceleration when thrust is applied
     public static final double DRAG = 0.01; //constant speed loss factor
 
 
-    public PlayerShip(Controller c)
+    public PlayerShip()
     {
-        super(new Vector2D((double) FRAME_WIDTH/2,(double)FRAME_HEIGHT/2),new Vector2D(0,0),HITBOX,c);
-        //this.ctrl=c;
+        super(new Vector2D((double) FRAME_WIDTH/2,(double)FRAME_HEIGHT/2),new Vector2D(0,0),HITBOX);
+        ctrl= new Keys();
         clr=Color.CYAN;
         direction=new Vector2D(0,-1);
         MUZZLE_VELOCITY=400;
         STEER_RATE=2*Math.PI;
-
 
     }
 
@@ -91,9 +90,9 @@ public class PlayerShip extends Ship
     public void hit()
     {
         SoundManager.play(SoundManager.beat1);
-        //Game.playerHit();
-        //if(Game.lives<=0)
-            //dead=true;
+        Game.playerHit();
+        if(Game.lives<=0)
+            dead=true;
     }
 
     @Override

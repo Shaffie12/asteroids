@@ -2,7 +2,6 @@ package game1;
 
 import util.JEasyFrame;
 import util.SoundManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,46 +9,56 @@ public class Game
 {
     public static final  int N_INITIAL_ASTEROIDS = 5;
     public List<GameObject> objects;
-    public Keys ctrl;
     public PlayerShip playerShip;
     public static long score;
     public static int lives =3;
     public static int level=1;
     public static boolean gameOver=false;
+    long nextSpawn;
+
 
     public Game()
     {
+        nextSpawn=(long)(System.currentTimeMillis()/1000.0+(Math.random()*(25-10)+10)); //first enemy can only spawn in 5-10 seconds after start
         score=0;
         objects = new ArrayList<>();
-        ctrl = new Keys();
-        playerShip = new PlayerShip(ctrl);
-        Saucer bigSaucer = Saucer.makeRandomSaucer(true);
-        Saucer smallSaucer = Saucer.makeRandomSaucer(false);
+        playerShip = new PlayerShip();
 
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
         {
             objects.add(Asteroid.makeRandomAsteroid());
         }
         objects.add(playerShip);
-        objects.add(bigSaucer);
-        objects.add(smallSaucer);
-        //targeting AIs
-        AimNShoot hard= new AimNShoot(this, true);
-        hard.aimer = smallSaucer;
-        smallSaucer.ctrl=hard;
+
 
     }
 
-    //use this
+    //randomly generate saucers, at higher scores only hard AI will spawn
     public Saucer makeAISaucer()
     {
-        boolean big = Math.random() > 0.5;
-        boolean hard = Math.random() >0.5;
-        Saucer s = Saucer.makeRandomSaucer(big);
-        if (!big)
+        boolean big;
+        Saucer s;
+        double probSmall= (10.0*(level*1.5))/100; //flat rate  *(level*scaler)
+        double probHard = score/Math.pow(100,2);
+
+
+        if(level <3)
         {
-            s.ctrl=new AimNShoot(this,hard);
+            big = true;
+            s = Saucer.makeRandomSaucer(big);
+
         }
+        else
+        {
+            big = Math.random()>probSmall;
+            boolean hard = Math.random()<probHard;
+            s=Saucer.makeRandomSaucer(big);
+            if (hard)
+                s.ctrl=new AccurateShoot(this,s);
+        }
+
+
+
 
         return s;
 
@@ -57,6 +66,8 @@ public class Game
 
     public void update()
     {
+
+        int numEnemy=0;
         List<GameObject> alive = new ArrayList<>();
         boolean noAsteroid=true;
         boolean noEnemy = true;
@@ -95,6 +106,7 @@ public class Game
             if(objects.get(i) instanceof Saucer)
             {
                 noEnemy=false;
+                numEnemy++;
                 if(((Saucer) objects.get(i)).bullet!=null)
                 {
                     alive.add(((Saucer)objects.get(i)).bullet);
@@ -117,6 +129,17 @@ public class Game
         {
             objects.clear();
             objects.addAll(alive);
+            long time = System.currentTimeMillis()/1000;
+
+            if(time>nextSpawn && numEnemy<2)
+            {
+                nextSpawn=(long)(time+Math.random()*(25-10)+10);
+                objects.add(makeAISaucer());
+
+
+            }
+
+
         }
         if(noAsteroid && noEnemy)
         {
@@ -149,7 +172,7 @@ public class Game
         {
             Thread.sleep(500);
         }
-        catch (Exception e){};
+        catch (Exception e){}
 
         synchronized (Game.class)
         {
@@ -158,10 +181,9 @@ public class Game
             for(int i=0;i<numAsteroids;i++)
             {
                 objects.add(Asteroid.makeRandomAsteroid());
-
             }
             objects.add(playerShip);
-            objects.add(Saucer.makeRandomSaucer(false));
+
         }
     }
 
@@ -182,7 +204,7 @@ public class Game
     {
         Game game = new Game();
         View view = new View(game);
-        new JEasyFrame(view, "Asteroids").addKeyListener(game.ctrl);
+        new JEasyFrame(view, "Asteroids").addKeyListener((Keys)game.playerShip.ctrl);
         while (!gameOver)
         {
             game.update();

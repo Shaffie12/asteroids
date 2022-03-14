@@ -10,18 +10,19 @@ public class Saucer extends Ship
 {
 
     public Sprite s;
-    long lastTurn;
 
+    //atm you specify a controller when you create one, but all of the targeting AIs require being set after saucer creation.
 
-    public Saucer(Vector2D pos, Vector2D vel, int rad, Controller c)
+    public Saucer(Vector2D pos, Vector2D vel, int rad)
     {
-        super(pos,vel,rad,c);
+        super(pos,vel,rad);
 
         clr = Color.red;
-        MUZZLE_VELOCITY=400;
+        MUZZLE_VELOCITY=200;
         direction = new Vector2D(0,1);
         s =new Sprite(Constants.UFO,position,direction,radius,radius);
         STEER_RATE=2*Math.PI;
+        ctrl = new RotateNShoot(); //default AT.  make it just wander
 
 
 
@@ -30,13 +31,13 @@ public class Saucer extends Ship
     public static Saucer makeRandomSaucer(boolean big)
     {
         int rad;
-        Controller c = new RotateNShoot();
+        double rx;
+        double ry=Math.random()*(Constants.FRAME_HEIGHT-200)+200;
 
         if(big)
         {
             rad = 20;
             MAX_SPEED=170;
-
         }
         else
         {
@@ -45,20 +46,16 @@ public class Saucer extends Ship
 
         }
 
-
-        double rand = Math.random();
-        if(rand > 0.5)
+        //randomly position saucer on left or right
+        if(Math.random()>0.5)
         {
-            double rx = (Math.random() < 0.5? Math.random()*Constants.leftx:Math.random()*(FRAME_WIDTH-Constants.rightx)+Constants.rightx);
-            return new Saucer(new Vector2D(rx, Math.random()*FRAME_HEIGHT),new Vector2D(MAX_SPEED,0),rad,c);
-
+            rx = 0;
         }
         else
         {
-            double ry = (Math.random() < 0.5? Math.random()*Constants.topy:Math.random()*(FRAME_HEIGHT-Constants.boty)+Constants.boty);
-            return new Saucer(new Vector2D(Math.random()*FRAME_WIDTH,ry),new Vector2D(MAX_SPEED,0),rad,c);
-
+            rx= FRAME_WIDTH;
         }
+        return new Saucer(new Vector2D(rx,ry),new Vector2D(MAX_SPEED,0),rad);
 
 
     }
@@ -70,15 +67,18 @@ public class Saucer extends Ship
         super.update();
         Action a = ctrl.action();
         double time = System.currentTimeMillis();
+        if(ctrl instanceof AccurateShoot)
+            direction.rotate(a.turn*STEER_RATE);
+        else
+            direction.rotate(a.turn*STEER_RATE*Constants.DT);
 
-        direction.rotate(a.turn*STEER_RATE*DT);
+
         if(a.shoot && time > lastFire)
         {
             makeBullet();
             lastFire=System.currentTimeMillis()+500;
             a.shoot=false;
         }
-        direction.rotate(a.turn*STEER_RATE);
 
 
     }
@@ -88,9 +88,7 @@ public class Saucer extends Ship
     public void draw(Graphics2D g)
     {
         s.draw(g);
-
         /*
-
         g.fillOval((int) (position.x-radius), (int) (position.y-radius), (int)( (radius*2)), (int)( radius*2));
 
         Vector2D p = new Vector2D();
@@ -103,23 +101,27 @@ public class Saucer extends Ship
          */
 
 
+
+
     }
 
     @Override
     public void makeBullet()
     {
-        if(ctrl instanceof AimNShoot) {
+        if(ctrl instanceof AccurateShoot)
+        {
             Vector2D bulletPos = new Vector2D(position);
             bulletPos.addScaled(direction, radius * 2);
 
-
-            Vector2D bulletVel = new Vector2D(((AimNShoot) ctrl).getTargetPos());
+            Vector2D bulletVel = new Vector2D(((AccurateShoot) ctrl).getTargetPos());
             bulletVel.addScaled(direction, MUZZLE_VELOCITY);
 
             bullet = new Bullet(bulletPos, bulletVel);
+
         }
         else
             super.makeBullet();
+
     }
 
     @Override

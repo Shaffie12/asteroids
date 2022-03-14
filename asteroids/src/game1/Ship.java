@@ -14,10 +14,9 @@ public abstract class Ship extends GameObject
     public static double MAX_SPEED=200;
 
 
-    public Ship(Vector2D pos, Vector2D vel, int rad, Controller c )
+    public Ship(Vector2D pos, Vector2D vel, int rad)
     {
         super(pos,vel,rad);
-        ctrl=c;
         lastFire=0;
         bullet=null;
 

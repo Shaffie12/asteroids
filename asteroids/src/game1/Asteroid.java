@@ -52,8 +52,6 @@ public class Asteroid extends GameObject
             return a;
         }
 
-
-
     }
 
     @Override
@@ -90,13 +88,15 @@ public class Asteroid extends GameObject
         radius=radius/2;
         s.width = s.width/2;
         s.height = s.height/2;
+        velocity.multi(2);
         if(radius<5)
         {
-
+            SoundManager.play(SoundManager.bangSmall);
             dead=true;
         }
         else
         {
+            SoundManager.play(SoundManager.bangLarge);
             shard = new Asteroid(position.x, position.y, -velocity.x, -velocity.y, radius);
         }
 

@@ -1,44 +1,58 @@
 package game1;
 
 
+
 public class WanderNShoot extends Controllers implements Controller
 {
     public Action action;
     Game game;
     Ship aimer;
-    int mvTimer;
+    int mvTimer=0;
 
-    public WanderNShoot()
+    public WanderNShoot(Game game, Ship aimer)
     {
+        this.game=game;
+        this.aimer=aimer;
 
     }
 
     public Action action()
     {
-        Action a= new Action();
-        //move for a random amount of time l/r inverting x axis
-        a.turn=Controllers.aimInaccurate(aimer,game.playerShip);
 
+        action=new Action();
 
+        action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
 
-        return a;
-    }
-
-
-    private void randomInvert(double ttm)
-    {
-        if(mvTimer<ttm)
-        {
-            action.turn=dir; //will this work?
-            rotTimer+=Constants.DT;
-        }
+        if(angleToTarget(aimer,game.playerShip)<0.1)
+            action.shoot=true;
         else
-        {
-            randomMov(Math.random()*(2-1)+1);
-            action.turn=0;
-            rotTimer=0;
-        }
+            action.shoot=false;
+
+        return action;
+        /*
+        action= new Action();
+        //move for a random amount of time l/r inverting x axis
+        action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
+        action.shoot= angleToTarget(aimer, game.playerShip) < 0.1;
+
+        //action.invertX = Math.random()>0.5? true:false;
+
+
+
+
+        return action;
+
+         */
     }
+
+
+
+
+
+
+
 }
+
+
 
 
