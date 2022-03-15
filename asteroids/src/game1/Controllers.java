@@ -6,7 +6,7 @@ public class Controllers
 {
     public Controllers(){}
 
-    public static GameObject findTarget(Ship aimer, Iterable<GameObject> gobjects)
+    public static GameObject findClosestHittable(Ship aimer, Iterable<GameObject> gobjects)
     {
 
         GameObject closest=null;
@@ -16,14 +16,14 @@ public class Controllers
             double distFromAimer = aimer.position.dist(o.position);
             if(closest==null)
             {
-                if(aimer.canHit(o) && distFromAimer<=AimNShoot.SHOOTING_DISTANCE)
+                if(aimer.canHit(o))
                 {
                     closest=o;
                 }
             }
             else
             {
-                if(aimer.canHit(o) && distFromAimer<=AimNShoot.SHOOTING_DISTANCE && distFromAimer < aimer.position.dist(closest.position))
+                if(aimer.canHit(o) && distFromAimer < aimer.position.dist(closest.position))
                 {
                     closest=o;
                 }

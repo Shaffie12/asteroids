@@ -27,6 +27,7 @@ public class Saucer extends Ship
 
 
     }
+    //randomly generate powerup on death of saucer (give shield?)
 
     public static Saucer makeRandomSaucer(boolean big)
     {
@@ -72,13 +73,34 @@ public class Saucer extends Ship
         else
             direction.rotate(a.turn*STEER_RATE*Constants.DT);
 
-
-        if(a.shoot && time > lastFire)
+        if(ctrl instanceof AimNShoot)
         {
-            makeBullet();
-            lastFire=System.currentTimeMillis()+500;
-            a.shoot=false;
+            if(a.shoot && time > lastFire)
+            {
+                makeBullet();
+                lastFire=System.currentTimeMillis()+1500;
+                a.shoot=false;
+            }
         }
+        else
+        {
+            if(a.shoot && time > lastFire)
+            {
+                makeBullet();
+                lastFire=System.currentTimeMillis()+700;
+                a.shoot=false;
+            }
+        }
+        if(a.avoid)
+        {
+            moveUp();
+        }
+        else
+        {
+            velocity.y=0;
+        }
+
+
 
 
     }
@@ -148,6 +170,17 @@ public class Saucer extends Ship
     @Override
     public boolean canHit(GameObject other)
     {
-        return other instanceof PlayerShip;
+        return other instanceof PlayerShip || other instanceof Asteroid;
     }
+
+    void moveDown()
+    {
+        velocity.y=200;
+    }
+
+    void moveUp()
+    {
+        velocity.y =-200;
+    }
+
 }

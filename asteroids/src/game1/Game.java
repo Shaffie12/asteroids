@@ -2,6 +2,8 @@ package game1;
 
 import util.JEasyFrame;
 import util.SoundManager;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,9 @@ public class Game
         }
         objects.add(playerShip);
 
+        Saucer s = Saucer.makeRandomSaucer(false);
+        s.ctrl = new WanderNShoot(this,s);
+        objects.add(s);
 
     }
 
@@ -131,6 +136,7 @@ public class Game
             objects.addAll(alive);
             long time = System.currentTimeMillis()/1000;
 
+            /*
             if(time>nextSpawn && numEnemy<2)
             {
                 nextSpawn=(long)(time+Math.random()*(25-10)+10);
@@ -138,6 +144,8 @@ public class Game
 
 
             }
+
+             */
 
 
         }

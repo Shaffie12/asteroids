@@ -1,13 +1,13 @@
 package game1;
 
 
+import util.Vector2D;
 
 public class WanderNShoot extends Controllers implements Controller
 {
     public Action action;
     Game game;
     Ship aimer;
-    int mvTimer=0;
 
     public WanderNShoot(Game game, Ship aimer)
     {
@@ -21,28 +21,29 @@ public class WanderNShoot extends Controllers implements Controller
 
         action=new Action();
 
-        action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
 
-        if(angleToTarget(aimer,game.playerShip)<0.1)
-            action.shoot=true;
+        action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
+        GameObject closest = findClosestHittable(aimer,game.objects);
+        if(closest instanceof Asteroid || closest instanceof PlayerShip && aimer.position.dist(closest.position)<80)
+        {
+            if (withinRange(closest.position))
+                action.avoid = true;
+        }
         else
-            action.shoot=false;
-
-        return action;
-        /*
-        action= new Action();
-        //move for a random amount of time l/r inverting x axis
-        action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
-        action.shoot= angleToTarget(aimer, game.playerShip) < 0.1;
-
-        //action.invertX = Math.random()>0.5? true:false;
+            action.avoid=false;
+        //he needs to be able to move up and down. have him make the smartest choice about where to move depending on what is in either direction?  give him some ability to see forward before moving
 
 
 
 
         return action;
 
-         */
+
+    }
+
+    private boolean withinRange(Vector2D hittable)
+    {
+        return Math.abs(hittable.x-aimer.position.x)<aimer.radius+100;
     }
 
 
