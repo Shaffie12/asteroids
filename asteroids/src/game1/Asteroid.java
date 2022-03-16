@@ -25,7 +25,7 @@ public class Asteroid extends GameObject
 
     }
 
-
+//make so only large slow ones spawn at the start of every level
     public static Asteroid makeRandomAsteroid()
     {
 
@@ -74,7 +74,7 @@ public class Asteroid extends GameObject
             other.hit();
 
         }
-        else if (other instanceof  PlayerShip)
+        else if (other instanceof  Ship)
         {
             this.hit();
             other.hit();

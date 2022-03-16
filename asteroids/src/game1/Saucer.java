@@ -50,11 +50,11 @@ public class Saucer extends Ship
         //randomly position saucer on left or right
         if(Math.random()>0.5)
         {
-            rx = 0;
+            rx = -20;
         }
         else
         {
-            rx= FRAME_WIDTH;
+            rx= FRAME_WIDTH+20;
         }
         return new Saucer(new Vector2D(rx,ry),new Vector2D(MAX_SPEED,0),rad);
 
@@ -91,14 +91,12 @@ public class Saucer extends Ship
                 a.shoot=false;
             }
         }
-        if(a.avoid)
-        {
-            moveUp();
-        }
-        else
-        {
-            velocity.y=0;
-        }
+       if(a.mvUp)
+           moveUp();
+       else if(a.mvDown)
+           moveDown();
+       else
+           velocity.y=0;
 
 
 
@@ -130,7 +128,7 @@ public class Saucer extends Ship
     @Override
     public void makeBullet()
     {
-        if(ctrl instanceof AccurateShoot)
+        if(ctrl instanceof AccurateShoot )
         {
             Vector2D bulletPos = new Vector2D(position);
             bulletPos.addScaled(direction, radius * 2);
@@ -149,7 +147,7 @@ public class Saucer extends Ship
     @Override
     public void collisionHandling(GameObject other)
     {
-        if (other instanceof PlayerShip)
+        if (other instanceof PlayerShip || other instanceof Asteroid)
         {
             this.hit();
             other.hit();

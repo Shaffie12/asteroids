@@ -15,6 +15,7 @@ public class Game
     public static long score;
     public static int lives =3;
     public static int level=1;
+    public static int max_enemy=2;
     public static boolean gameOver=false;
     long nextSpawn;
 
@@ -32,34 +33,46 @@ public class Game
         }
         objects.add(playerShip);
 
-        Saucer s = Saucer.makeRandomSaucer(false);
-        s.ctrl = new WanderNShoot(this,s);
-        objects.add(s);
-
     }
 
     //randomly generate saucers, at higher scores only hard AI will spawn
     public Saucer makeAISaucer()
     {
-        boolean big;
-        Saucer s;
-        double probSmall= (10.0*(level*1.5))/100; //flat rate  *(level*scaler)
-        double probHard = score/Math.pow(100,2);
+        double big,wander,hard;
+        big=1-(10.0*(level*1.5))/100;
+        wander = (10.0*(level*1.5))/100;
+        hard = score/Math.pow(100,2);
 
+        Saucer s;
 
         if(level <3)
         {
-            big = true;
-            s = Saucer.makeRandomSaucer(big);
-
+            s = Saucer.makeRandomSaucer(true);
         }
         else
         {
-            big = Math.random()>probSmall;
-            boolean hard = Math.random()<probHard;
-            s=Saucer.makeRandomSaucer(big);
-            if (hard)
-                s.ctrl=new AccurateShoot(this,s);
+           s = Saucer.makeRandomSaucer(Math.random()<big);
+           if(Math.random()<wander)
+           {
+               if(Math.random()<hard)
+               {
+                   s.ctrl=new AccurateWanderShoot(this,s);
+               }
+               else
+                   s.ctrl = new WanderNShoot(this,s);
+           }
+           else
+           {
+               if(Math.random()<hard)
+               {
+                   s.ctrl=new AccurateShoot(this,s);
+               }
+               else
+                   s.ctrl = new AimNShoot(this,s);
+
+           }
+
+
         }
 
 
@@ -136,7 +149,6 @@ public class Game
             objects.addAll(alive);
             long time = System.currentTimeMillis()/1000;
 
-            /*
             if(time>nextSpawn && numEnemy<2)
             {
                 nextSpawn=(long)(time+Math.random()*(25-10)+10);
@@ -144,8 +156,6 @@ public class Game
 
 
             }
-
-             */
 
 
         }
@@ -167,11 +177,9 @@ public class Game
         }
     }
 
+
     public long getScore(){return score;}
 
-    public int getLives(){return lives;}
-
-    public int getLevel(){return level;}
 
     public void newLevel()
     {
@@ -206,6 +214,10 @@ public class Game
         }
 
     }
+
+    public int getLives(){return lives;}
+
+    public int getLevel(){return level;}
 
     //main
     public static void main(String[] args) throws Exception

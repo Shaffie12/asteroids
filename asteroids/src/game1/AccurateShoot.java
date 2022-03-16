@@ -4,10 +4,9 @@ import util.Vector2D;
 
 public class AccurateShoot extends Controllers implements Controller
 {
-    public static double SHOOTING_DISTANCE; //how close target must be before it fires
-    private Game game;
+    Game game;
     Action action;
-    public Ship aimer;
+    Ship aimer;
 
 
     public AccurateShoot(Game game, Ship aimer)

@@ -1,18 +1,18 @@
 package game1;
 
 
-import util.Vector2D;
-
 public class WanderNShoot extends Controllers implements Controller
 {
     public Action action;
-    Game game;
-    Ship aimer;
+    private final Game game;
+    public Ship aimer;
+    boolean ac_up;
 
     public WanderNShoot(Game game, Ship aimer)
     {
         this.game=game;
         this.aimer=aimer;
+        ac_up = Math.random()>0.5; //randomly generate a movement
 
     }
 
@@ -20,35 +20,34 @@ public class WanderNShoot extends Controllers implements Controller
     {
 
         action=new Action();
-
-
         action.turn=Controllers.aimInaccurate(aimer,game.playerShip);
+
+
         GameObject closest = findClosestHittable(aimer,game.objects);
-        if(closest instanceof Asteroid || closest instanceof PlayerShip && aimer.position.dist(closest.position)<80)
+
+        if(closest instanceof Asteroid || closest instanceof PlayerShip && aimer.position.dist(closest.position)<80) //if something enters range do the action
         {
-            if (withinRange(closest.position))
-                action.avoid = true;
+            if(ac_up)
+                action.mvUp=true;
+            else
+                action.mvDown=true;
+
         }
-        else
-            action.avoid=false;
-        //he needs to be able to move up and down. have him make the smartest choice about where to move depending on what is in either direction?  give him some ability to see forward before moving
+        else //once nothing is in range, reset action to do and currently doing
+        {
+            action.mvUp=false;
+            action.mvDown=false;
+            ac_up=Math.random()>0.5;
+        }
 
-
+        if(angleToTarget(aimer,game.playerShip)<1)
+            action.shoot=true;
 
 
         return action;
 
 
     }
-
-    private boolean withinRange(Vector2D hittable)
-    {
-        return Math.abs(hittable.x-aimer.position.x)<aimer.radius+100;
-    }
-
-
-
-
 
 
 
