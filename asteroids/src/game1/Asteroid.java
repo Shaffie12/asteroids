@@ -3,7 +3,6 @@ import util.SoundManager;
 import util.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 import static game1.Constants.*;
 
@@ -31,7 +30,7 @@ public class Asteroid extends GameObject
 
         double rvx= (Math.random()>0.5? Math.random()*1:Math.random()*-1);
         double rvy=(Math.random()>0.5?Math.random()*1:Math.random()*-1);
-        double rrad = Math.random()*(20-5)+5;
+        double rrad = Math.random()*(20-15)+15;
 
         double rand = Math.random();
         if(rand > 0.5)
@@ -66,6 +65,7 @@ public class Asteroid extends GameObject
     {
         if(other instanceof Bullet && (((Bullet)other).playerBullet))
         {
+
             if(radius>=5 && radius<=7)
                 Game.incScore(200);
             else
@@ -76,6 +76,7 @@ public class Asteroid extends GameObject
         }
         else if (other instanceof  Ship)
         {
+
             this.hit();
             other.hit();
         }
@@ -85,10 +86,11 @@ public class Asteroid extends GameObject
     @Override
     public void hit()
     {
+
         radius=radius/2;
         s.width = s.width/2;
         s.height = s.height/2;
-        velocity.multi(2);
+        velocity.multi(1.2);
         if(radius<5)
         {
             SoundManager.play(SoundManager.bangSmall);

@@ -45,11 +45,20 @@ public class View extends JComponent
                 {
                     go.draw(g);
                 }
+                for(Particle p: game.particles)
+                {
+                    p.draw(g);
+                }
             }
 
         }
         else
         {
+            for(GameObject o:game.objects)
+            {
+                if(o instanceof Saucer s)
+                    s.sound.close();
+            }
             String text = "GAME OVER";
             g.setColor(Color.WHITE);
             Font goFont = new Font(Font.MONOSPACED, Font.PLAIN, 40);

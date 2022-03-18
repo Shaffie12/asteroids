@@ -1,7 +1,9 @@
 package game1;
 
+import util.SoundManager;
 import util.Vector2D;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 
 import static game1.Constants.*;
@@ -10,10 +12,11 @@ public class Saucer extends Ship
 {
 
     public Sprite s;
+    public Clip sound;
 
     //atm you specify a controller when you create one, but all of the targeting AIs require being set after saucer creation.
 
-    public Saucer(Vector2D pos, Vector2D vel, int rad)
+    public Saucer(Vector2D pos, Vector2D vel, int rad, Clip sound)
     {
         super(pos,vel,rad);
 
@@ -23,9 +26,8 @@ public class Saucer extends Ship
         s =new Sprite(Constants.UFO,position,direction,radius,radius);
         STEER_RATE=2*Math.PI;
         ctrl = new RotateNShoot(); //default AT.  make it just wander
-
-
-
+        this.sound=sound;
+        sound.loop(-1);
     }
     //randomly generate powerup on death of saucer (give shield?)
 
@@ -34,16 +36,18 @@ public class Saucer extends Ship
         int rad;
         double rx;
         double ry=Math.random()*(Constants.FRAME_HEIGHT-200)+200;
-
+        Clip sound;
         if(big)
         {
             rad = 20;
             MAX_SPEED=170;
+            sound= SoundManager.saucerBig;
         }
         else
         {
             rad = 10;
             MAX_SPEED=300;
+            sound=SoundManager.saucerSmall;
 
         }
 
@@ -56,7 +60,7 @@ public class Saucer extends Ship
         {
             rx= FRAME_WIDTH+20;
         }
-        return new Saucer(new Vector2D(rx,ry),new Vector2D(MAX_SPEED,0),rad);
+        return new Saucer(new Vector2D(rx,ry),new Vector2D(MAX_SPEED,0),rad,sound);
 
 
     }
@@ -119,8 +123,6 @@ public class Saucer extends Ship
         g.drawLine((int)(position.x),(int)(position.y),(int)p.x,(int)p.y);
 
          */
-
-
 
 
     }

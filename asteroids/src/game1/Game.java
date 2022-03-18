@@ -2,8 +2,10 @@ package game1;
 
 import util.JEasyFrame;
 import util.SoundManager;
+import util.Vector2D;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class Game
 {
     public static final  int N_INITIAL_ASTEROIDS = 5;
     public List<GameObject> objects;
+    public List<Particle> particles;
     public PlayerShip playerShip;
     public static long score;
     public static int lives =3;
@@ -25,6 +28,7 @@ public class Game
         nextSpawn=(long)(System.currentTimeMillis()/1000.0+(Math.random()*(25-10)+10)); //first enemy can only spawn in 5-10 seconds after start
         score=0;
         objects = new ArrayList<>();
+        particles = new ArrayList<>();
         playerShip = new PlayerShip();
 
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
@@ -85,10 +89,13 @@ public class Game
     public void update()
     {
 
-        int numEnemy=0;
+        int numEnemy=0; //dont spawn more than 2 on screen at once
         List<GameObject> alive = new ArrayList<>();
+        List<Particle> aliveParticles = new ArrayList<>();
         boolean noAsteroid=true;
         boolean noEnemy = true;
+        boolean noPlayer=true;
+
 
         for(int i=0;i<objects.size();i++) //because of this loop, object at the end of the array is never checked against anything.  Its collision handling has to be in the other object's. (UFO becomes (this), but other part of the loop never executes)
         {
@@ -110,10 +117,13 @@ public class Game
                     alive.add(a.shard);
                     a.shard=null;
                 }
+                if(a.dead)
+                    explosion(a);
 
             }
             else if(objects.get(i) instanceof PlayerShip)
             {
+                noPlayer=false;
                 if(!(playerShip.bullet == null))
                 {
                     alive.add(playerShip.bullet);
@@ -121,15 +131,21 @@ public class Game
                 }
 
             }
-            if(objects.get(i) instanceof Saucer)
+            if(objects.get(i) instanceof Saucer s)
             {
                 noEnemy=false;
                 numEnemy++;
-                if(((Saucer) objects.get(i)).bullet!=null)
+                if(s.bullet!=null)
                 {
                     alive.add(((Saucer)objects.get(i)).bullet);
 
                     ((Saucer)objects.get(i)).bullet=null;
+                }
+                if(s.dead)
+                {
+                    explosion(s);
+                    s.sound.stop();
+
                 }
             }
             if(objects.get(i).getClass()==Bullet.class)
@@ -142,21 +158,24 @@ public class Game
             if(!objects.get(i).dead)
                 alive.add(objects.get(i));
 
+            aliveParticles= updateParticles();
+
         }
         synchronized (Game.class)
         {
             objects.clear();
             objects.addAll(alive);
+            particles.clear();
+            particles.addAll(aliveParticles);
+
+
             long time = System.currentTimeMillis()/1000;
 
             if(time>nextSpawn && numEnemy<2)
             {
                 nextSpawn=(long)(time+Math.random()*(25-10)+10);
                 objects.add(makeAISaucer());
-
-
             }
-
 
         }
         if(noAsteroid && noEnemy)
@@ -213,6 +232,34 @@ public class Game
 
         }
 
+    }
+
+    public void explosion(GameObject ob)
+    {
+        Color c;
+        if(ob instanceof Saucer)
+            c=Color.green;
+        else
+            c=Color.YELLOW;
+
+        for(int i=0;i<10;i++)
+            particles.add(new Particle(ob.position,c));
+    }
+
+    public List<Particle> updateParticles()
+    {
+        List<Particle> alive=new ArrayList<>();
+        for (Particle p:particles)
+        {
+            p.update();
+
+            if(Math.abs(p.timeSpawned-System.currentTimeMillis())>p.ttl)
+                p.dead=true;
+
+            if(!p.dead)
+                alive.add(p);
+        }
+        return  alive;
     }
 
     public int getLives(){return lives;}
