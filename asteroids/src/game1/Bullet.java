@@ -9,6 +9,7 @@ public class Bullet extends GameObject
     public static final int RADIUS = 3;
     public boolean playerBullet;
 
+
     public Bullet(Vector2D pos, Vector2D vel)
     {
         super(pos,vel,RADIUS);

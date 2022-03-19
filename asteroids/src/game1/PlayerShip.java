@@ -15,6 +15,8 @@ public class PlayerShip extends Ship
     private static final int HITBOX = 8;
     public static final double MAG_ACC = 430; //acceleration when thrust is applied
     public static final double DRAG = 0.01; //constant speed loss factor
+    public boolean invulnerable = false;
+    public long timeInvuln;
 
 
     public PlayerShip()
@@ -44,6 +46,12 @@ public class PlayerShip extends Ship
             lastFire=System.currentTimeMillis()+100;
             a.shoot=false;
         }
+        if(invulnerable)
+            if(Math.abs(System.currentTimeMillis()-timeInvuln)>10000)
+            {
+                invulnerable=false;
+
+            }
 
     }
 
@@ -57,8 +65,13 @@ public class PlayerShip extends Ship
         g.setColor(clr);
         g.fillPolygon(XP,YP,XP.length);
         g.setTransform(at);
-        //because the affineTransform of g has been modified it will apply these transformations to any object it draws now?
-        //so the bullets wont be drawn properly since they are adjusted by all the transformations we made before so reset it to default
+        if(invulnerable)
+        {
+
+            Color col = new Color(0,0,204,127);
+            g.setColor(col);
+            g.fillOval((int) (position.x-(radius*3)/2), (int) (position.y-(radius*3)/2), (int)( (radius*3)), (int)(radius*3));
+        }
 
     }
 
@@ -82,15 +95,28 @@ public class PlayerShip extends Ship
     @Override
     public void collisionHandling(GameObject other)
     {
-        this.hit();
-        other.hit();
+        if(other instanceof Friendly)
+        {
+            other.hit();
+            invulnerable = true;
+            Game.lives++;
+            timeInvuln =System.currentTimeMillis();
+            SoundManager.play(SoundManager.extraShip);
+        }
+        else
+        {
+            this.hit();
+            other.hit();
+        }
+
     }
 
     @Override
     public void hit()
     {
         SoundManager.play(SoundManager.beat1);
-        Game.playerHit();
+        if(!invulnerable)
+            Game.playerHit();
         if(Game.lives<=0)
             dead=true;
     }

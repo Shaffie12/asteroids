@@ -14,7 +14,6 @@ public class Saucer extends Ship
     public Sprite s;
     public Clip sound;
 
-    //atm you specify a controller when you create one, but all of the targeting AIs require being set after saucer creation.
 
     public Saucer(Vector2D pos, Vector2D vel, int rad, Clip sound)
     {
@@ -25,18 +24,20 @@ public class Saucer extends Ship
         direction = new Vector2D(0,1);
         s =new Sprite(Constants.UFO,position,direction,radius,radius);
         STEER_RATE=2*Math.PI;
-        ctrl = new RotateNShoot(); //default AT.  make it just wander
+        ctrl = new RotateNShoot(); //default AT.
         this.sound=sound;
         sound.loop(-1);
     }
-    //randomly generate powerup on death of saucer (give shield?)
+
 
     public static Saucer makeRandomSaucer(boolean big)
     {
         int rad;
         double rx;
-        double ry=Math.random()*(Constants.FRAME_HEIGHT-200)+200;
+        double ry=Math.random()*Constants.FRAME_HEIGHT;
+        double speed = MAX_SPEED;
         Clip sound;
+
         if(big)
         {
             rad = 20;
@@ -54,13 +55,16 @@ public class Saucer extends Ship
         //randomly position saucer on left or right
         if(Math.random()>0.5)
         {
+            speed=speed*-1;
             rx = -20;
+
         }
         else
         {
+            speed=MAX_SPEED;
             rx= FRAME_WIDTH+20;
         }
-        return new Saucer(new Vector2D(rx,ry),new Vector2D(MAX_SPEED,0),rad,sound);
+        return new Saucer(new Vector2D(rx,ry),new Vector2D(speed,0),rad,sound);
 
 
     }

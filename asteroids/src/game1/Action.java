@@ -7,4 +7,5 @@ public class Action
     public boolean shoot;
     public boolean mvDown;
     public boolean mvUp;
+    public boolean move;
 }

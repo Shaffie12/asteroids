@@ -20,8 +20,8 @@ public class AnimSprite
         this.position=pos;
         this.cellWidth=cellWidth;
         this.cellHeight=cellHeight;
-        this.destWidth=destWidth;
-        this.destHeight=destHeight;
+        this.destWidth=destWidth*2;
+        this.destHeight=destHeight*2;
 
         rows=image.getHeight(null)/cellHeight;
         cols = image.getWidth(null)/cellWidth;
@@ -31,11 +31,12 @@ public class AnimSprite
 
     public void draw(Graphics2D g)
     {
+
         int srcX = (index%cols)*cellWidth;
         int srcY = (index/cols)*cellHeight;
 
-        int destX = (int) position.x;
-        int destY = (int) position.y;
+        int destX = (int) position.x-destWidth/2;
+        int destY = (int) position.y-destHeight/2;
 
         int destX1 = (isFlipX ? destX + destWidth : destX);
         int destX2 = (isFlipX ? destX : destX + destWidth);
@@ -45,6 +46,7 @@ public class AnimSprite
 
     public void update()
     {
+
         index = (index+1) % size;
     }
 

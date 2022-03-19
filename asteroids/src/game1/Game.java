@@ -36,6 +36,7 @@ public class Game
             objects.add(Asteroid.makeRandomAsteroid());
         }
         objects.add(playerShip);
+        ;
 
     }
 
@@ -86,6 +87,14 @@ public class Game
 
     }
 
+    public void makeFriendly(GameObject source)
+    {
+        Friendly f = new Friendly(new Vector2D(source.position),new Vector2D(0,0));
+        f.ctrl= new Wander(this,f);
+        objects.add(f);
+
+    }
+
     public void update()
     {
 
@@ -94,10 +103,8 @@ public class Game
         List<Particle> aliveParticles = new ArrayList<>();
         boolean noAsteroid=true;
         boolean noEnemy = true;
-        boolean noPlayer=true;
 
-
-        for(int i=0;i<objects.size();i++) //because of this loop, object at the end of the array is never checked against anything.  Its collision handling has to be in the other object's. (UFO becomes (this), but other part of the loop never executes)
+        for(int i=0;i<objects.size();i++)
         {
             for(int j=i+1;j<objects.size();j++)
             {
@@ -121,13 +128,13 @@ public class Game
                     explosion(a);
 
             }
-            else if(objects.get(i) instanceof PlayerShip)
+            else if(objects.get(i) instanceof PlayerShip p)
             {
-                noPlayer=false;
-                if(!(playerShip.bullet == null))
+
+                if(!(p.bullet == null))
                 {
-                    alive.add(playerShip.bullet);
-                    playerShip.bullet = null;
+                    alive.add(p.bullet);
+                    p.bullet = null;
                 }
 
             }
@@ -145,14 +152,24 @@ public class Game
                 {
                     explosion(s);
                     s.sound.stop();
+                    if (Math.random()<0.3)
+                        makeFriendly(s);
+
 
                 }
             }
-            if(objects.get(i).getClass()==Bullet.class)
+            if(objects.get(i) instanceof Bullet b)
             {
-                if(objects.get(i).position.x <0 || objects.get(i).position.y<0 || objects.get(i).position.x >Constants.FRAME_WIDTH || objects.get(i).position.y >Constants.FRAME_HEIGHT)
+                if(b.position.x <0 ||b.position.y<0 || b.position.x >Constants.FRAME_WIDTH || b.position.y >Constants.FRAME_HEIGHT)
                 {
-                    objects.get(i).dead=true;
+                    b.dead=true;
+                }
+            }
+            if(objects.get(i) instanceof Friendly f)
+            {
+                if(Math.abs(f.timeSpawned-System.currentTimeMillis())>10000)
+                {
+                    f.dead=true;
                 }
             }
             if(!objects.get(i).dead)
@@ -198,7 +215,6 @@ public class Game
 
 
     public long getScore(){return score;}
-
 
     public void newLevel()
     {
