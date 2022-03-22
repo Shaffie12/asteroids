@@ -4,9 +4,11 @@ import util.ImageManager;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 
 public class Constants
 {
+    public static Random rand = new Random();
     public static final int FRAME_HEIGHT=480;
     public static final int FRAME_WIDTH=640;
     public static final Dimension FRAME_SIZE = new Dimension(

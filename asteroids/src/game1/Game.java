@@ -14,6 +14,7 @@ public class Game
     public static final  int N_INITIAL_ASTEROIDS = 5;
     public List<GameObject> objects;
     public List<Particle> particles;
+    public List<Star> stars;
     public PlayerShip playerShip;
     public static long score;
     public static int lives =3;
@@ -21,22 +22,28 @@ public class Game
     public static int max_enemy=2;
     public static boolean gameOver=false;
     long nextSpawn;
+    public static float worldSpeed=0.1f;
 
 
     public Game()
     {
         nextSpawn=(long)(System.currentTimeMillis()/1000.0+(Math.random()*(25-10)+10)); //first enemy can only spawn in 5-10 seconds after start
         score=0;
+        stars= new ArrayList<>();
         objects = new ArrayList<>();
         particles = new ArrayList<>();
         playerShip = new PlayerShip();
+        for(int i=0;i<1000;i++)
+        {
+            stars.add(new Star());
+        }
 
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
         {
             objects.add(Asteroid.makeRandomAsteroid());
         }
         objects.add(playerShip);
-        ;
+
 
     }
 
@@ -103,6 +110,8 @@ public class Game
         List<Particle> aliveParticles = new ArrayList<>();
         boolean noAsteroid=true;
         boolean noEnemy = true;
+        for(Star st: stars)
+            st.update();
 
         for(int i=0;i<objects.size();i++)
         {
@@ -188,7 +197,7 @@ public class Game
 
             long time = System.currentTimeMillis()/1000;
 
-            if(time>nextSpawn && numEnemy<2)
+            if(time>nextSpawn && numEnemy<max_enemy)
             {
                 nextSpawn=(long)(time+Math.random()*(25-10)+10);
                 objects.add(makeAISaucer());

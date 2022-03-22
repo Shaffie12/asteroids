@@ -10,13 +10,14 @@ public class View extends JComponent
 {
     public static final Color BG_COLOR = Color.black;
     private Game game;
-    Image img = Constants.MILKYWAY;
-    AffineTransform bg;
+    //Image img = Constants.MILKYWAY;
+    //AffineTransform bg;
 
 
     public View(Game game)
     {
         this.game=game;
+        /*
         double imgWid = img.getWidth(null);
         double imgHeight = img.getHeight(null);
         double stretchx = (imgWid >Constants.FRAME_WIDTH? 1: Constants.FRAME_WIDTH/imgWid);
@@ -24,6 +25,8 @@ public class View extends JComponent
 
         bg = new AffineTransform();
         bg.scale(stretchx,stretchx);
+
+         */
     }
 
     @Override
@@ -31,8 +34,8 @@ public class View extends JComponent
     {
         Graphics2D g =(Graphics2D) g0;
         g.setColor(BG_COLOR);
-        g.drawImage(img,bg,null);
-        //g.fillRect(0,0,getWidth(),getHeight());
+        //g.drawImage(img,bg,null);
+        g.fillRect(0,0,getWidth(),getHeight());
         if(!Game.gameOver)
         {
             g.setColor(Color.WHITE);
@@ -41,14 +44,15 @@ public class View extends JComponent
             g.drawString("LEVEL: "+Integer.toString(game.getLevel()),7,getHeight()-15);
             synchronized (Game.class)
             {
+                for(Star st:game.stars)
+                        st.draw(g);
+
                 for (GameObject go:game.objects)
-                {
                     go.draw(g);
-                }
+
                 for(Particle p: game.particles)
-                {
                     p.draw(g);
-                }
+
             }
 
         }
