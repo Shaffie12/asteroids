@@ -37,7 +37,8 @@ public class Sprite
                 height);
     }
 
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g)
+    {
         double imW = image.getWidth(null);
         double imH = image.getHeight(null);
         AffineTransform t = new AffineTransform();
@@ -48,6 +49,7 @@ public class Sprite
         g.translate(position.x, position.y);
         g.drawImage(image, t, null);
         g.setTransform(t0);
+
     }
 
 }

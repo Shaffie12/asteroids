@@ -18,7 +18,6 @@ public class Star
         radius=z>50? 1:2;
         color=z>50? new Color(255,255,255):new Color(204,204,204);
 
-        Random r = new Random();
         double rx,ry;
         rx = Constants.rand.nextDouble()*Constants.FRAME_WIDTH;
         ry= Constants.rand.nextDouble()*Constants.FRAME_HEIGHT;
@@ -41,7 +40,6 @@ public class Star
 
     private void repos()
     {
-        ;
         position.x=Constants.rand.nextDouble()*Constants.FRAME_WIDTH;
         position.y=0;
     }

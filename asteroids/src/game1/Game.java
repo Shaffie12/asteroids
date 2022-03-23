@@ -15,6 +15,7 @@ public class Game
     public List<GameObject> objects;
     public List<Particle> particles;
     public List<Star> stars;
+    public List<Prop> props;
     public PlayerShip playerShip;
     public static long score;
     public static int lives =3;
@@ -30,6 +31,7 @@ public class Game
         nextSpawn=(long)(System.currentTimeMillis()/1000.0+(Math.random()*(25-10)+10)); //first enemy can only spawn in 5-10 seconds after start
         score=0;
         stars= new ArrayList<>();
+        props= new ArrayList<>();
         objects = new ArrayList<>();
         particles = new ArrayList<>();
         playerShip = new PlayerShip();
@@ -37,12 +39,15 @@ public class Game
         {
             stars.add(new Star());
         }
-
+        for(int i=0;i<4;i++)
+            props.add(new Prop(Constants.rand.nextInt(2)));
         for(int i=0;i<N_INITIAL_ASTEROIDS;i++)
         {
             objects.add(Asteroid.makeRandomAsteroid());
         }
         objects.add(playerShip);
+
+
 
 
     }
@@ -112,6 +117,8 @@ public class Game
         boolean noEnemy = true;
         for(Star st: stars)
             st.update();
+        for(Prop pr: props)
+            pr.update();
 
         for(int i=0;i<objects.size();i++)
         {

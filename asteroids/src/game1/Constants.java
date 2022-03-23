@@ -19,7 +19,7 @@ public class Constants
     public static final double boty = FRAME_HEIGHT -80;
     public static final double leftx = FRAME_WIDTH-(FRAME_WIDTH+80);
     public static final double rightx = FRAME_WIDTH-80;
-    public static Image ASTEROID1, ASTEROID2, MILKYWAY, UFO, F_IDLE;
+    public static Image ASTEROID1, ASTEROID2, UFO,MILKYWAY,PLANET, F_IDLE;
 
 
     static
@@ -28,7 +28,8 @@ public class Constants
         {
             ASTEROID1 = ImageManager.loadImage("as1");
             ASTEROID2 = ImageManager.loadImage("as2");
-            MILKYWAY = ImageManager.loadImage("milkyway1");
+            MILKYWAY = ImageManager.loadImage("milkyway");
+            PLANET = ImageManager.loadImage("planet1");
             UFO = ImageManager.loadImage("ufo");
             F_IDLE = ImageManager.loadImage("friendly/idle");
         }

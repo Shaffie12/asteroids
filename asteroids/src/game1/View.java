@@ -33,6 +33,7 @@ public class View extends JComponent
     public void paintComponent(Graphics g0)
     {
         Graphics2D g =(Graphics2D) g0;
+
         g.setColor(BG_COLOR);
         //g.drawImage(img,bg,null);
         g.fillRect(0,0,getWidth(),getHeight());
@@ -47,12 +48,14 @@ public class View extends JComponent
                 for(Star st:game.stars)
                         st.draw(g);
 
+                for(Prop p: game.props)
+                    p.draw(g);
+
                 for (GameObject go:game.objects)
                     go.draw(g);
 
                 for(Particle p: game.particles)
                     p.draw(g);
-
             }
 
         }
