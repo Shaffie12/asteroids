@@ -3,6 +3,7 @@ package game1;
 import util.ImageManager;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
@@ -20,6 +21,7 @@ public class Constants
     public static final double leftx = FRAME_WIDTH-(FRAME_WIDTH+80);
     public static final double rightx = FRAME_WIDTH-80;
     public static Image ASTEROID1, ASTEROID2, UFO,MILKYWAY,PLANET, F_IDLE;
+    public static File SAVE_FILE = new File("config/save");
 
 
     static

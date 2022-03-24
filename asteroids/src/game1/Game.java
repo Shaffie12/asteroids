@@ -6,6 +6,10 @@ import util.Vector2D;
 
 
 import java.awt.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class Game
     public static boolean gameOver=false;
     long nextSpawn;
     public static float worldSpeed=0.1f;
+    public static long high_score = loadScore();
 
 
     public Game()
@@ -298,6 +303,48 @@ public class Game
 
     public int getLevel(){return level;}
 
+    public void save()
+    {
+        try
+        {
+            long s=loadScore();
+            if(s<getScore())
+            {
+                DataOutputStream out = new DataOutputStream(new FileOutputStream(Constants.SAVE_FILE));
+                out.writeLong(this.getScore());
+                out.close();
+                System.out.println("Saved new high score!");
+            }
+
+        }
+        catch (Exception e)
+        {
+           e.printStackTrace();
+        }
+
+    }
+
+    public static long loadScore()
+    {
+        long score=0;
+        if(Constants.SAVE_FILE.exists())
+        {
+            try
+            {
+                DataInputStream in = new DataInputStream(new FileInputStream(Constants.SAVE_FILE));
+                score=in.readLong();
+                in.close();
+            }
+            catch(Exception e)
+            {
+                System.out.println("file could not be openend");
+            }
+        }
+
+        return score;
+
+    }
+
     //main
     public static void main(String[] args) throws Exception
     {
@@ -310,7 +357,8 @@ public class Game
             view.repaint();
             Thread.sleep(Constants.DELAY);
         }
-       view.repaint();
+        game.save();
+        view.repaint();
 
 
 

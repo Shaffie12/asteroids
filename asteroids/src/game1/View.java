@@ -43,6 +43,7 @@ public class View extends JComponent
             g.drawString("SCORE "+Long.toString(game.getScore()),7,15);
             g.drawString("LIVES: "+Integer.toString(game.getLives()),7,30);
             g.drawString("LEVEL: "+Integer.toString(game.getLevel()),7,getHeight()-15);
+            g.drawString("HIGH SCORE: "+Long.toString(Game.high_score),7,getHeight()-30);
             synchronized (Game.class)
             {
                 for(Star st:game.stars)
